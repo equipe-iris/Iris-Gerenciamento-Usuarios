@@ -1,1 +1,1 @@
-## api
+## swagger em http://localhost:3000/api
