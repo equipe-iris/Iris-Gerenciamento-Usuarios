@@ -32,6 +32,7 @@ export class UsersController {
         nome: 'Pedro Almeida',
         role: 'admin',
         email: 'teste.test@example.com',
+        password: 'strongPassword123',
       },
     },
   })
@@ -67,6 +68,7 @@ export class UsersController {
         nome: 'New Name',
         role: 'admin',
         email: 'new.email@example.com',
+        password: 'newStrongPassword123',
       },
     },
   })

@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 import * as dotenv from 'dotenv';
 import { join } from 'path';
 
@@ -16,9 +17,10 @@ dotenv.config();
       password: process.env.DB_PASS,
       database: process.env.DB_NAME,
       entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-      synchronize: true, // em prod usar migrations
+      synchronize: true,
     }),
     UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

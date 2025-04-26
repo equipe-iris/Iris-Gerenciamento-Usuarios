@@ -1,9 +1,5 @@
-import {
-    IsString,
-    IsEmail,
-    IsEnum,
-  } from 'class-validator';
-  import { UserRole } from '../entities/user.entity';
+import { IsString, IsEmail, IsEnum, MinLength } from 'class-validator';
+import { UserRole } from '../entities/user.entity';
   
   export class CreateUserDto {
     @IsString()
@@ -14,5 +10,8 @@ import {
   
     @IsEmail()
     email: string;
+
+    @IsString()
+    @MinLength(6, { message: 'Password must be at least 6 characters' })
+    password: string;
   }
-  
