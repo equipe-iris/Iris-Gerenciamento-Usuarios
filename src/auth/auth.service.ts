@@ -1,33 +1,22 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../users/entities/user.entity';
-import { LoginDto } from './dto/login.dto';
-import { HashingService } from '../common/services/hashing.service';
+import { Repository } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import { HashingService } from 'src/common/services/hashing.service';
+import { ValidateUserDto } from './dto/validate-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepo: Repository<User>,
-    private readonly jwtService: JwtService,
-    private readonly hashingService: HashingService,
+    @InjectRepository(User) private userRepo: Repository<User>,
+    private hashing: HashingService,
   ) {}
 
-  private async validateUser(email: string, password: string): Promise<User> {
-    const user = await this.userRepo.findOne({ where: { email } });
-    if (!user) throw new UnauthorizedException('Invalid credentials');
-
-    const isValid = await this.hashingService.compare(password, user.password);
-    if (!isValid) throw new UnauthorizedException('Invalid credentials');
-
-    return user;
-  }
-
-  async login(dto: LoginDto): Promise<{ access_token: string }> {
-    const user = await this.validateUser(dto.email, dto.password);
-    const payload = { sub: user.id, role: user.role };
-    return { access_token: this.jwtService.sign(payload) };
+  async validateCredentials(dto: ValidateUserDto): Promise<{ id: string; role: string, name: string }> {
+    const user = await this.userRepo.findOne({ where: { email: dto.email } });
+    if (!user || !(await this.hashing.compare(dto.password, user.password))) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+    return { id: user.id, role: user.role, name: user.name };
   }
 }

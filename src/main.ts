@@ -10,6 +10,16 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true }));
 
+  const origins = (process.env.ALLOWED_ORIGINS || '')
+    .split(',')
+    .map(o => o.trim())
+    .filter(o => !!o);
+
+  app.enableCors({
+    origin: origins,
+    credentials: true,
+  });
+
   const config = new DocumentBuilder()
     .setTitle('User Service')
     .setDescription('API for user management')
@@ -17,8 +27,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  // Swagger on http://localhost:3000/api
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('docs', app, document);
 
   app.enableCors();
   await app.listen(process.env.PORT || 3000);

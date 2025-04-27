@@ -6,32 +6,23 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login.dto';
+import { ValidateUserDto } from './dto/validate-user.dto';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
-  @ApiOperation({ summary: 'User login with email and password' })
-  @ApiBody({
-    schema: {
-      example: {
-        email: 'user@example.com',
-        password: 'strongPassword123',
-      },
-    },
-  })
+  @Post('validate')
+  @ApiOperation({ summary: 'Validate user credentials' })
+  @ApiBody({ type: ValidateUserDto })
   @ApiResponse({
-    status: 201,
-    description: 'JWT token',
-    schema: {
-      example: { access_token: 'eyJhbGciOiJIUzI1NiI...' },
-    },
+    status: 200,
+    description: 'Credentials valid',
+    schema: { example: { id: '550e8400-e29b-41d4-a716-446655440000', role: 'ADMIN', name: 'Pedro Alvis' } },
   })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
-  login(@Body() dto: LoginDto) {
-    return this.authService.login(dto);
+  validate(@Body() dto: ValidateUserDto) {
+    return this.authService.validateCredentials(dto);
   }
 }
