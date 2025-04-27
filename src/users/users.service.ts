@@ -12,7 +12,7 @@ export class UsersService {
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
     private readonly hashingService: HashingService,
-  ) {}
+  ) { }
 
   async create(dto: CreateUserDto): Promise<User> {
     const hashed = await this.hashingService.hash(dto.password);
@@ -28,9 +28,13 @@ export class UsersService {
   }
 
   async update(id: string, dto: UpdateUserDto): Promise<User> {
+    if (dto.password !== undefined && dto.password.trim() === '') {
+      delete dto.password;
+    }
     if (dto.password) {
       dto.password = await this.hashingService.hash(dto.password);
     }
+    delete dto.id;
     await this.userRepo.update(id, dto);
     return this.findOne(id);
   }
@@ -43,13 +47,15 @@ export class UsersService {
 
   findAll(): Promise<Partial<User>[]> {
     return this.userRepo.find({
-      select: ['nome', 'role', 'email'],
+      select: ['id', 'name', 'role', 'email'],
     });
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: string): Promise<{ message: string }> {
     const result = await this.userRepo.delete(id);
-    if (result.affected === 0)
-      throw new NotFoundException('user not found');
-  }
+    if (result.affected === 0) {
+        throw new NotFoundException('User not found');
+    }
+    return { message: 'User successfully removed' };
+}
 }

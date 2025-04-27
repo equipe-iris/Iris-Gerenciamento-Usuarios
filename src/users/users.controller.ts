@@ -29,8 +29,8 @@ export class UsersController {
   @ApiBody({
     schema: {
       example: {
-        nome: 'Pedro Almeida',
-        role: 'admin',
+        name: 'Pedro Almeida',
+        role: 'ADMIN',
         email: 'teste.test@example.com',
         password: 'strongPassword123',
       },
@@ -65,7 +65,7 @@ export class UsersController {
   @ApiBody({
     schema: {
       example: {
-        nome: 'New Name',
+        name: 'New Name',
         role: 'admin',
         email: 'new.email@example.com',
         password: 'newStrongPassword123',

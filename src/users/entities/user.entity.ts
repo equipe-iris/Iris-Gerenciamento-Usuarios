@@ -6,8 +6,8 @@ import {
 } from 'typeorm';
 
 export enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
+  ADMIN = 'ADMIN',
+  VIEWER = 'VIEWER',
 }
 
 @Entity('users')
@@ -17,12 +17,12 @@ export class User {
   id: string;
 
   @Column()
-  nome: string;
+  name: string;
 
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: UserRole.USER,
+    default: UserRole.VIEWER,
   })
   role: UserRole;
 

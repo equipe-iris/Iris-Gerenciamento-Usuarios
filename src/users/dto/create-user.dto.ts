@@ -3,7 +3,7 @@ import { UserRole } from '../entities/user.entity';
   
   export class CreateUserDto {
     @IsString()
-    nome: string;
+    name: string;
   
     @IsEnum(UserRole)
     role: UserRole;
