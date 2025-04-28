@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  user-service:
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "${USERS_PORT}:4000"
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${USERS_DB_USER}
+      - POSTGRES_PASSWORD=${USERS_DB_PASS}
+      - POSTGRES_DB=${USERS_DB_NAME}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "${USERS_DB_PORT}:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    env_file:
+      - .env
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+volumes:
+  db-data:
