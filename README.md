@@ -1,4 +1,4 @@
-# Ecutando a API com docker
+# Escutando a API com docker
 
 ## Requisitos
 
